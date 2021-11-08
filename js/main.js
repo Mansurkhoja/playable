@@ -50,12 +50,12 @@ const stairs = [
 		PIXI.Sprite.from('./assets/new_stair_03.png')
 	],
 	stairOld = PIXI.Sprite.from('./assets/old_stair.png'),
-  stairSize = 500,
+	stairSize = 500,
 	stairPosition = [1080, 265];
 app.stage.addChild(stairOld);
 for (let i = 0; i < stairs.length; i++) {
 	stairs[i].width = stairSize;
-  // stairs[i].height = stairSize;
+	// stairs[i].height = stairSize;
 	stairs[i].anchor.set(0.5);
 	stairs[i].position.set(stairPosition[0], stairPosition[1] - 50);
 	stairs[i].visible = false;
@@ -83,15 +83,29 @@ app.stage.addChild(hammerBtn);
 hammerBtn.on('pointerdown', hummerlick);
 function hummerlick() {
 	hammerBtn.visible = false;
-  showHideMenuBtn();
+	showHideMenuBtn();
 }
 function showHideMenuBtn() {
-  for (let i = 0; i < menuButtons.length; i++) {
+	for (let i = 0; i < menuButtons.length; i++) {
 		menuButtons[i].visible = !menuButtons[i].visible;
 	}
-	menuButtonsImage1.visible = !menuButtonsImage1.visible ;
-	menuButtonsImage2.visible = !menuButtonsImage2.visible ;
-	menuButtonsImage3.visible = !menuButtonsImage3.visible ;
+	menuButtonsImage1.visible = !menuButtonsImage1.visible;
+	menuButtonsImage2.visible = !menuButtonsImage2.visible;
+	menuButtonsImage3.visible = !menuButtonsImage3.visible;
+	scaleMenuButtons();
+}
+let menuButtonsScale = 0;
+function scaleMenuButtons() {
+	if (menuButtonsScale <= 0.9) {
+		menuButtonsScale += 0.1;
+		for (let i = 0; i < menuButtons.length; i++) {
+			menuButtons[i].scale.set(menuButtonsScale);
+		}
+		menuButtonsImage1.scale.set(menuButtonsScale);
+		menuButtonsImage2.scale.set(menuButtonsScale);
+		menuButtonsImage3.scale.set(menuButtonsScale);
+		requestAnimationFrame(scaleMenuButtons);
+	}
 }
 setTimeout(() => {
 	hammerBtn.visible = true;
@@ -131,6 +145,7 @@ for (let i = 0; i < 3; i++) {
 	app.stage.addChild(button);
 	menuButtons.push(button);
 	menuButtons[i].visible = false;
+	menuButtons[i].scale.set(0);
 }
 menuButtonConfirm.visible = false;
 menuButtonConfirm.buttonMode = true;
@@ -146,7 +161,7 @@ function menuButtonClick() {
 	menuButtonConfirm.position.set(this.x - 15, 118);
 	for (let i = 0; i < stairs.length; i++) {
 		stairs[i].visible = false;
-    stairs[this.id].alpha = 0;
+		stairs[this.id].alpha = 0;
 		stairs[this.id].y = stairPosition[1];
 	}
 	stairs[this.id].visible = true;
@@ -156,8 +171,9 @@ function menuButtonClick() {
 menuButtonConfirm.on('pointerdown', confirmStair);
 //final show
 function confirmStair() {
+	menuButtonConfirm.visible = false;
 	final.visible = true;
-  showHideMenuBtn();
+	showHideMenuBtn();
 }
 function showStair() {
 	if (stairs[choosedStair].alpha < 1) {
